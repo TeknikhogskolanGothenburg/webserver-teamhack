@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IntegrationTests
@@ -26,10 +27,11 @@ namespace IntegrationTests
         public void Ressource_NonExsiting_NotFound()
         {
             // Arrange
-            WebRequest request = WebRequest.Create(Localhost+"xcvbadfg.html");
+            WebRequest request = WebRequest.Create(Localhost + "xyzqwer.html");
+
 
             // Act
-            WebResponse response = request.GetResponse();
+            WebResponse response = request.GetResponseNoException();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, ((HttpWebResponse)response).StatusCode);
