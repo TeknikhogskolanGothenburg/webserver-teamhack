@@ -10,15 +10,18 @@ namespace IntegrationTestApplication
             Console.WriteLine("Starting integration tests");
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            try
-            {
-                var ressource = new RessourceTest();
-                TestRunner.RunTheMethod(ressource.Webserver_NonExsitingFile_200);
-                TestRunner.RunTheMethod(ressource.Webserver_RootIndexHtml_200);
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
+            var ressource = new RessourceTest();
+            TestRunner.RunTheMethod(ressource.Ressource_Root_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_Index_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_NonExsiting_NotFound);
+            TestRunner.RunTheMethod(ressource.Ressource_AnotherPage_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_Document_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_CatGif_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_PandaJpg_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_Script_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_Style_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_Subfolder_Ok);
+            TestRunner.RunTheMethod(ressource.Ressource_SubfolderIndex_Ok);
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine("Tests ran in "+elapsedMs+ " ms");
