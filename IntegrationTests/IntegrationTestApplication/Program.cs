@@ -35,6 +35,8 @@ namespace IntegrationTestApplication
             TestRunner.RunTheMethod(contentApproval.ContentApproval_Panda);
             TestRunner.RunTheMethod(contentApproval.ContentApproval_Document);
 
+
+
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine("Tests ran in "+elapsedMs+ " ms");
