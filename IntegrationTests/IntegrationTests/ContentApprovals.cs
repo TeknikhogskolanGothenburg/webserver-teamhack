@@ -10,7 +10,7 @@ namespace IntegrationTests
 {
     [TestClass]
     [UseReporter(typeof(DiffReporter))]
-    public class ContentApproval
+    public class ContentApprovals
     {
         public const string Localhost = "http://localhost:8080/";
         public const string LocalContentPath = "..//..//..//Content";

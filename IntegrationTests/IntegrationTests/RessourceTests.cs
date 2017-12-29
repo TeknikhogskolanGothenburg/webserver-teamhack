@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IntegrationTests
 {
     [TestClass]
-    public class RessourceTest
+    public class RessourceTests
     {
         public const string Localhost = "http://localhost:8080/";
 

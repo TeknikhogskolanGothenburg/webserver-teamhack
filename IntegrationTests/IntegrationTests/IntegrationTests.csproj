@@ -58,9 +58,10 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentApproval.cs" />
+    <Compile Include="ContentApprovals.cs" />
     <Compile Include="HttpExtension.cs" />
-    <Compile Include="RessourceTest.cs" />
+    <Compile Include="ResponseParametersTests.cs" />
+    <Compile Include="RessourceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

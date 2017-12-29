@@ -10,7 +10,7 @@ namespace IntegrationTestApplication
             Console.WriteLine("Starting integration tests");
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            var ressource = new RessourceTest();
+            var ressource = new RessourceTests();
             TestRunner.RunTheMethod(ressource.Ressource_Root_Ok);
             TestRunner.RunTheMethod(ressource.Ressource_Index_Ok);
             TestRunner.RunTheMethod(ressource.Ressource_NonExsiting_NotFound);
@@ -23,8 +23,17 @@ namespace IntegrationTestApplication
             TestRunner.RunTheMethod(ressource.Ressource_Subfolder_Ok);
             TestRunner.RunTheMethod(ressource.Ressource_SubfolderIndex_Ok);
 
-            var contentApproval = new ContentApproval();
+            var contentApproval = new ContentApprovals();
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Root);
             TestRunner.RunTheMethod(contentApproval.ContentApproval_Index);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Anotherpage);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_SubfolderRoot);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_SubfolderIndex);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Script);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Style);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Cat);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Panda);
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Document);
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
