@@ -1,0 +1,26 @@
+﻿body{
+    background-color:#277553;
+    text-align:center;
+    
+}
+h1{
+    color:#f4a341;
+}
+a{
+    margin:10px;
+}
+img{
+
+}
+button{
+    font-size: 1.5rem;
+}
+header{
+    background-color: #d9f442;
+    opacity:0.5;
+    border-radius:25px;
+    width:50%;
+    height:2rem;
+    display:inline-block;
+    margin:1rem;
+}

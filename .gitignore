@@ -289,4 +289,4 @@ __pycache__/
 
 # Approval tests
 *.bak
-*.recieved
+*.received.*
