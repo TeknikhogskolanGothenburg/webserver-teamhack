@@ -22,6 +22,10 @@ namespace IntegrationTestApplication
             TestRunner.RunTheMethod(ressource.Ressource_Style_Ok);
             TestRunner.RunTheMethod(ressource.Ressource_Subfolder_Ok);
             TestRunner.RunTheMethod(ressource.Ressource_SubfolderIndex_Ok);
+
+            var contentApproval = new ContentApproval();
+            TestRunner.RunTheMethod(contentApproval.ContentApproval_Index);
+
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine("Tests ran in "+elapsedMs+ " ms");
