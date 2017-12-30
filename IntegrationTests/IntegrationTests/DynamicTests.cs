@@ -1,11 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationTests
 {
@@ -14,12 +10,11 @@ namespace IntegrationTests
     {
         public const string Localhost = "http://localhost:8080/";
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void Dynamic_Add1And2_3AsText()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost+"dynamic?input1=1&input2=2");
-            
 
             // Act
             WebResponse response = request.GetResponse();
@@ -28,24 +23,41 @@ namespace IntegrationTests
             var requestContent = readStream.ReadToEnd();
 
             // Arrange
-            Assert.AreEqual(3, requestContent);   
+            Assert.AreEqual("3", requestContent);   
         }
 
-        [TestMethod, Ignore]
-        public void Dynamic_Add1And2_3AsXml()
+        [TestMethod]
+        public void Dynamic_Add2And3_3AsXml()
         {
             // Arrange
-            WebRequest request = WebRequest.Create(Localhost + "dynamic?input1=1&input2=2");
-
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(Localhost + "dynamic?input1=2&input2=3");
+            myHttpWebRequest.Accept = "application/xml";
 
             // Act
-            WebResponse response = request.GetResponse();
+            WebResponse response = myHttpWebRequest.GetResponse();
             Stream receiveStream = response.GetResponseStream();
             StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
             var requestContent = readStream.ReadToEnd();
 
             // Arrange
-            Assert.AreEqual(3, requestContent);
+            Assert.AreEqual("<result><value>5</value></result>", requestContent);
+        }
+
+        [TestMethod]
+        public void Dynamic_JustOneParameter_InternalServerError()
+        {
+            // Arrange
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(Localhost + "dynamic?input1=2");
+  
+            // Act
+            WebResponse response = myHttpWebRequest.GetResponseNoException();
+            Stream receiveStream = response.GetResponseStream();
+            StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+            var requestContent = readStream.ReadToEnd();
+
+            // Arrange
+            Assert.AreEqual(HttpStatusCode.InternalServerError, ((HttpWebResponse)response).StatusCode);
+            Assert.AreEqual("Missing input value", requestContent);
         }
 
         [TestMethod, Ignore]
