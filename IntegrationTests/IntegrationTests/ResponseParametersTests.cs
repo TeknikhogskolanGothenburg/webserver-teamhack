@@ -91,7 +91,7 @@ namespace IntegrationTests
             Assert.IsTrue(response.Headers[HttpResponseHeader.ContentType].Contains("image/gif"));
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void ResponseParameters_Etag_HtmlFile()
         {
             // Arrange
@@ -101,7 +101,7 @@ namespace IntegrationTests
             WebResponse response = request.GetResponse();
 
             // Assert
-            Assert.IsTrue(response.Headers[HttpResponseHeader.ContentType].Contains("text/html"));
+            Assert.AreEqual("cec994848ca6b58f6831a0676cd8670f", response.Headers[HttpResponseHeader.ETag],true);
         }
 
         [TestMethod, Ignore]
