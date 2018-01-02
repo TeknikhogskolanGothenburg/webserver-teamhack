@@ -13,7 +13,6 @@ namespace IntegrationTests
     public class ContentApprovals
     {
         public const string Localhost = "http://localhost:8080/";
-        public const string LocalContentPath = "..//..//..//Content";
 
         [TestMethod]
         public void ContentApproval_Root()

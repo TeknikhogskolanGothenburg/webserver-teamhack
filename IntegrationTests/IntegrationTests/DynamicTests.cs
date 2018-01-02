@@ -27,7 +27,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Dynamic_Add2And3_3AsXml()
+        public void Dynamic_Add2And3_5AsXml()
         {
             // Arrange
             HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(Localhost + "dynamic?input1=2&input2=3");
@@ -59,22 +59,6 @@ namespace IntegrationTests
             Assert.AreEqual(HttpStatusCode.InternalServerError, ((HttpWebResponse)response).StatusCode);
             Assert.AreEqual("Missing input value", requestContent);
         }
-
-        [TestMethod, Ignore]
-        public void Dynamic_PostFile()
-        {
-            // Arrange
-            WebRequest request = WebRequest.Create(Localhost + "dynamic?input1=1&input2=2");
-
-
-            // Act
-            WebResponse response = request.GetResponse();
-            Stream receiveStream = response.GetResponseStream();
-            StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
-            var requestContent = readStream.ReadToEnd();
-
-            // Arrange
-            Assert.AreEqual(3, requestContent);
-        }
+        
     }
 }

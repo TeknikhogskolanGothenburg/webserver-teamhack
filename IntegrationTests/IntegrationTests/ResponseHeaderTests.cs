@@ -1,20 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntegrationTests
 {
     [TestClass]
-    public class ResponseParametersTests
+    public class ResponseHeaderTests
     {
         public const string Localhost = "http://localhost:8080/";
 
         [TestMethod]
-        public void ResponseParameters_ContentType_HtmlFile()
+        public void ResponseHeaders_ContentType_HtmlFile()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "index.html");
@@ -27,7 +23,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ResponseParameters_ContentType_Javascript()
+        public void ResponseHeaders_ContentType_Javascript()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "script.js");
@@ -40,7 +36,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ResponseParameters_ContentType_Stylesheet()
+        public void ResponseHeaders_ContentType_Stylesheet()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "style.css");
@@ -53,7 +49,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ResponseParameters_ContentType_PdfDocument()
+        public void ResponseHeaders_ContentType_PdfDocument()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "document.pdf");
@@ -66,7 +62,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ResponseParameters_ContentType_JpgImage()
+        public void ResponseHeaders_ContentType_JpgImage()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "laughing_panda.jpg");
@@ -79,7 +75,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ResponseParameters_ContentType_GifImage()
+        public void ResponseHeaders_ContentType_GifImage()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "pianocat.gif");
@@ -92,7 +88,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void ResponseParameters_Etag_HtmlFile()
+        public void ResponseHeaders_Etag_HtmlFile()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "index.html");
@@ -104,8 +100,8 @@ namespace IntegrationTests
             Assert.AreEqual("cec994848ca6b58f6831a0676cd8670f", response.Headers[HttpResponseHeader.ETag],true);
         }
 
-        [TestMethod, Ignore]
-        public void ResponseParameters_Expires_HtmlFile()
+        [TestMethod]
+        public void ResponseHeaders_ExpiresInOneYear_HtmlFile()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "index.html");
@@ -114,7 +110,10 @@ namespace IntegrationTests
             WebResponse response = request.GetResponse();
 
             // Assert
-            Assert.IsTrue(response.Headers[HttpResponseHeader.ContentType].Contains("text/html"));
+            string oneYearFromNow = DateTime.UtcNow.AddYears(1).ToString("o");
+            string responseExpires = response.Headers[HttpResponseHeader.Expires];
+            Assert.AreEqual(oneYearFromNow.Substring(0, 17), responseExpires.Substring(0, 17));
+            Assert.AreEqual('Z', responseExpires[responseExpires.Length-1]);
         }
     }
 }

@@ -61,9 +61,9 @@
     <Compile Include="ContentApprovals.cs" />
     <Compile Include="DynamicTests.cs" />
     <Compile Include="HttpExtension.cs" />
-    <Compile Include="RequestParametersTests.cs" />
-    <Compile Include="ResponseParametersTests.cs" />
-    <Compile Include="RessourceTests.cs" />
+    <Compile Include="CookieTests.cs" />
+    <Compile Include="ResponseHeaderTests.cs" />
+    <Compile Include="StatusCodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IntegrationTests
 {
     [TestClass]
-    public class RessourceTests
+    public class StatusCodeTests
     {
         public const string Localhost = "http://localhost:8080/";
 
         [TestMethod]
-        public void Ressource_Root_Ok()
+        public void StatusCode_Root_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost);
@@ -24,7 +22,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_NonExsiting_NotFound()
+        public void StatusCode_NonExsiting_NotFound()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "xyzqwer.html");
@@ -38,7 +36,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_Index_Ok()
+        public void StatusCode_Index_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "index.html");
@@ -51,7 +49,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_AnotherPage_Ok()
+        public void StatusCode_AnotherPage_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "anotherpage.htm");
@@ -64,7 +62,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_Document_Ok()
+        public void StatusCode_Document_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "document.pdf");
@@ -77,7 +75,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_PandaJpg_Ok()
+        public void StatusCode_PandaJpg_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "laughing_panda.jpg");
@@ -90,7 +88,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_CatGif_Ok()
+        public void StatusCode_CatGif_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "pianocat.gif");
@@ -103,7 +101,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_Script_Ok()
+        public void StatusCode_Script_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "script.js");
@@ -116,7 +114,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_Style_Ok()
+        public void StatusCode_Style_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "style.css");
@@ -129,7 +127,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_Subfolder_Ok()
+        public void StatusCode_Subfolder_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "subfolder/");
@@ -142,7 +140,7 @@ namespace IntegrationTests
         }
 
         [TestMethod]
-        public void Ressource_SubfolderIndex_Ok()
+        public void StatusCode_SubfolderIndex_Ok()
         {
             // Arrange
             WebRequest request = WebRequest.Create(Localhost + "subfolder/index.html");
