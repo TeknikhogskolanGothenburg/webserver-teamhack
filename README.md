@@ -1,4 +1,4 @@
-# .About
+# About
 
 This repository contains what is needed to solve the first assigment in the couse "Webbutveckling i ramverket för .NET" ("Webdevelopment with the .NET framework") winter 2018 at [Teknikhögskolan Gothenburg](https://github.com/TeknikhogskolanGothenburg).
 

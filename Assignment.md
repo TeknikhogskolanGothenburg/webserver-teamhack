@@ -3,6 +3,8 @@ The assigment should be solved in teams of 3-4 students.
 
 The assignment consist of two parts, a programming part and a theory/docmentation part. Please see the prerequsists section (in the [README.md](README.md)).
 
+The work should be done in the teams github repo which should be public. Whit a [commit early and often](https://blog.codinghorror.com/check-in-early-check-in-often/) ([1](https://sethrobertson.github.io/GitBestPractices/)) strategy, the recomendation is of course only to commit code and documentation that builds.
+
 ## Code assignment
 
 Implement a webserver using the .NET framework which can read the files from the *content* folder and make it accessible on a local webserver running on port 8080.
@@ -25,7 +27,9 @@ By requesting [/counter](http://localhost:8080/counter) should the number of req
 
 In the inital request of the session is value of the cookie ofcourse unknown, but it should be returned as part of the response, and this returend cookie value should be used as cookie value for all following requests.
 
-### Dynamic8
+The value of the counter-cookie should be an incremental value starting at "1". So the cookie created for the first session after the server is started has the value "1" and the second new session should have the value "2" etc. 
+
+### Dynamic
 
 A dynamic page should be implemented at [/dynamic](http://localhost:8080/dynamic) it should take two get parameters called *input1* and *input2*. And the output should be the sum of the two inputs.
 
@@ -43,7 +47,10 @@ Your assigment is to fill the files:
 
 * articles\HttpVersion2.md
 * articles\WebserverArchitecture.md
+* articles\SessionHijacking.md
 
 And to build the documentation for the source code to the webserver.
 
 The run the documentation you can see the content of this by opening commandline and navigate to the DocsSrc folder, and write ```docfx .\docfx.json --serve --port 8081```, then open your browser and navigate to [localhost:8081](http://localhost:8081).
+
+Remeber to include references to all resources you use.
