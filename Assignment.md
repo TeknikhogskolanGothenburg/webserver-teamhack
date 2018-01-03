@@ -5,7 +5,7 @@ The assignment consist of two parts, a programming part and a theory/docmentatio
 
 The work should be done in the teams github repo which should be public. Whit a [commit early and often](https://blog.codinghorror.com/check-in-early-check-in-often/) ([1](https://sethrobertson.github.io/GitBestPractices/)) strategy, the recomendation is of course only to commit code and documentation that builds.
 
-## Coding part
+## Programming part
 
 Implement a webserver using the .NET framework which can read the files from the *content* folder and make it accessible on a local webserver running on port 8080.
 
