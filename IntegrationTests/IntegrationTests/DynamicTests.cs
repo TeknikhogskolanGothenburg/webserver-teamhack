@@ -23,7 +23,8 @@ namespace IntegrationTests
             var requestContent = readStream.ReadToEnd();
 
             // Arrange
-            Assert.AreEqual("3", requestContent);   
+            Assert.AreEqual("<html><body>3</body></html>", requestContent);
+            Assert.AreEqual("text/html", response.ContentType);   
         }
 
         [TestMethod]
@@ -41,6 +42,7 @@ namespace IntegrationTests
 
             // Arrange
             Assert.AreEqual("<result><value>5</value></result>", requestContent);
+            Assert.AreEqual("application/xml", response.ContentType);
         }
 
         [TestMethod]
