@@ -48,6 +48,7 @@ Your assigment is to fill the files:
 * articles\HttpVersion2.md
 * articles\WebserverArchitecture.md
 * articles\SessionHijacking.md
+* articles\AgileMethod.md
 
 And to build the documentation for the source code to the webserver.
 
