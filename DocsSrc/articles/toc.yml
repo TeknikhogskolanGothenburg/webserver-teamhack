@@ -2,3 +2,7 @@
   href: HttpVersion2.md
 - name: Webserver Architecture
   href: WebserverArchitecture.md
+- name: Session Hijacking
+  href: SessionHijacking.md
+- name: Webserver Architecture
+  href: WebserverArchitecture.md
