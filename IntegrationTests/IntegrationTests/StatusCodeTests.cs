@@ -17,17 +17,7 @@ namespace IntegrationTests
 
             // Act
             WebResponse response = null;
-            System.Console.WriteLine("1");
-            try
-            {
-                response = request.GetResponse();
-
-            }
-            catch (Exception e)
-            {
-                System.Console.WriteLine(e.ToString());
-            }
-            System.Console.WriteLine("2");
+            response = request.GetResponse();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, ((HttpWebResponse)response).StatusCode);
