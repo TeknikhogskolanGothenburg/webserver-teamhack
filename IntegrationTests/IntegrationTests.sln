@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTestApplication", "IntegrationTestApplication\IntegrationTestApplication.csproj", "{953393F0-748B-494C-99B4-AB60FBECF0F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{396B1B10-550B-426F-87C6-C7D6C22A8FDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{396B1B10-550B-426F-87C6-C7D6C22A8FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{396B1B10-550B-426F-87C6-C7D6C22A8FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{396B1B10-550B-426F-87C6-C7D6C22A8FDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
