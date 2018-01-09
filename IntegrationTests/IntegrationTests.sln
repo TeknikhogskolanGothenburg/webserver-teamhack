@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTestApplication", "IntegrationTestApplication\IntegrationTestApplication.csproj", "{953393F0-748B-494C-99B4-AB60FBECF0F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{396B1B10-550B-426F-87C6-C7D6C22A8FDE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServerTest", "..\..\..\..\Dropbox\C#\WebServerTest\WebServerTest\WebServerTest.csproj", "{68B0C8B9-809E-4B06-8AFC-D7C0CA7FFCF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{396B1B10-550B-426F-87C6-C7D6C22A8FDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{396B1B10-550B-426F-87C6-C7D6C22A8FDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{396B1B10-550B-426F-87C6-C7D6C22A8FDE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68B0C8B9-809E-4B06-8AFC-D7C0CA7FFCF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68B0C8B9-809E-4B06-8AFC-D7C0CA7FFCF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68B0C8B9-809E-4B06-8AFC-D7C0CA7FFCF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68B0C8B9-809E-4B06-8AFC-D7C0CA7FFCF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

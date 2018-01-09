@@ -19,6 +19,7 @@ namespace IntegrationTestApplication
             {
                 failException = ex;
                 testCompleted = false;
+                Console.Write(ex.ToString());
             }
 
             testWatch.Stop();
