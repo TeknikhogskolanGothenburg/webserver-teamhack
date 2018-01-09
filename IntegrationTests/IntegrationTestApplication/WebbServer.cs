@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebServerTest
+namespace IntegrationTestApplication
 {
-    class Program
+    class WebbServer
     {
-        static void Main(string[] prefixes)
+      public  static void RunServer()
         {
             //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
             SimpleListenerExample(new String[] { "http://localhost:8080/" });
         }
 
         // This example requires the System and System.Net namespaces.
-        public static void SimpleListenerExample(string[] prefixes)
+        private static void SimpleListenerExample(string[] prefixes)
         {
             if (!HttpListener.IsSupported)
             {
@@ -45,16 +46,29 @@ namespace WebServerTest
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
                 // Construct a response.
-                string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-                // Get a response stream and write the response to it.
-                response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-                // You must close the output stream.
-                output.Close();
+                string[] fileEntries = Directory.GetFiles("Content");
+                foreach (string i in fileEntries) {
+                    string responseString = i;
+                    byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                    // Get a response stream and write the response to it.
+                    response.ContentLength64 = buffer.Length;
+                    System.IO.Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    // You must close the output stream.
+                    output.Close();
+                }
             }
             //listener.Stop();
         }
+
+     
+
+
+
     }
+
+
+
+
 }
+

@@ -7,6 +7,8 @@ namespace IntegrationTestApplication
     {
         static void Main(string[] args)
         {
+           
+
             Console.WriteLine("Starting integration tests");
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
