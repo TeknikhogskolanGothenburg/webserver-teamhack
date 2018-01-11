@@ -11,7 +11,7 @@ namespace Server
     class Program
     {
        
-        static void Main(string[] prefixes)
+        static void Main(string[] args)
         {
            
             try

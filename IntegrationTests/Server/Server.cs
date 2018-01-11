@@ -11,7 +11,7 @@ namespace Server
     class Server
     {
         private static String ContentFolderName = "Content";
-        
+        private static int w;
 
         public static  void RunServer()
         {
@@ -43,7 +43,7 @@ namespace Server
         }
         private static void CreatePrefixes()
         {
-            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            string[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
             string[] urls = new string[fileEntries.Length];
             if (fileEntries.Length >= 1)
             {
@@ -98,20 +98,25 @@ namespace Server
             foreach (string s in prefixes)
             {
                 listener.Prefixes.Add(s);
+                //Cookie 
+                //    l= new Cookie("contoso", "123,456", "", "https://contoso.com");
+                //CookieContainer e = new CookieContainer();
             }
             
                 Console.WriteLine("Listening...");
                 while (true)
                 {
                     listener.Start();
+                
                     // Note: The GetContext method blocks while waiting for a request.
                     HttpListenerContext context = listener.GetContext();
                     HttpListenerRequest request = context.Request;
-                    // Obtain a response object.
-                    HttpListenerResponse response = context.Response;
+                // Obtain a response object.
+                     HttpListenerResponse response = context.Response;
+             
 
-                    Console.WriteLine("Current page: " + request.RawUrl);
-
+                Console.WriteLine("Current page: " + request.RawUrl);
+              
                     byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                     // Get a response stream and write the response to it.
                     response.ContentLength64 = buffer.Length;
