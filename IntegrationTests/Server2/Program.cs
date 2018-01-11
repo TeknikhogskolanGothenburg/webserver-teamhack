@@ -11,13 +11,13 @@ namespace Server2
     class Program
     {
         private static String ContentFolderName = "Content";
-        private static String[] FileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
 
         static void Main(string[] prefixes)
         {
             //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
             //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
             bool printFiles = true;
+            String[] FileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
             string[] urls = new string[FileEntries.Length];
             if (printFiles)
             {
