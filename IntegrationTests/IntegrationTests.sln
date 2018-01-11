@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTestApplication", "IntegrationTestApplication\IntegrationTestApplication.csproj", "{953393F0-748B-494C-99B4-AB60FBECF0F0}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server2", "Server2\Server2.csproj", "{B7DA1FF2-07F4-468A-8F83-95090D1A006F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalmanServer", "SalmanServer\SalmanServer.csproj", "{A789E5F9-EC64-45F3-8F4F-C00D34D02962}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B7DA1FF2-07F4-468A-8F83-95090D1A006F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7DA1FF2-07F4-468A-8F83-95090D1A006F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7DA1FF2-07F4-468A-8F83-95090D1A006F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
