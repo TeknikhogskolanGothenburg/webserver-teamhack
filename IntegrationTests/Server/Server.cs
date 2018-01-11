@@ -8,43 +8,77 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class Program
+    class Server
     {
         private static String ContentFolderName = "Content";
-        static void Main(string[] prefixes)
+        
+
+        public static  void RunServer()
         {
-            //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
-            //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
+             GetPrefixes();
+  
+        }
+      
+        private static void GetPrefixes()
+        {
             try
             {
-                String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
-                string[] urls = new string[fileEntries.Length];
-                if (ContentFolderName.Length >= 1)
-                {
-                    Console.WriteLine("Files in " + ContentFolderName + " folder:");
+                CreatePrefixes();
 
-                    for (int i = 0; i < fileEntries.Length; i++)
-                    {
-                        if (ContentFolderName.Length >= 1)
-                        {
-                            Console.WriteLine(fileEntries[i]);
-                        }
-                        urls[i] = "http://localhost:8080/" + fileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/";
-                    }
 
-                    SimpleListenerExample(urls);
-                }
-                else
-                {
-                    Console.WriteLine("Could not find any files!");
-                }
             }
             catch
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" Content Directory Was Deleted");
+                Console.ForegroundColor = ConsoleColor.White;
                 Directory.CreateDirectory("Content");
-            }
-        }
+                CreatePrefixes();
+                Console.WriteLine("New Content Directory Was Created");
+                Console.ReadKey();
 
+            }
+
+
+        }
+        private static void CreatePrefixes()
+        {
+            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            string[] urls = new string[fileEntries.Length];
+            if (fileEntries.Length >= 1)
+            {
+                Console.WriteLine("Files in " + ContentFolderName + " folder:");
+
+                for (int i = 0; i < fileEntries.Length; i++)
+                {
+                    if (ContentFolderName.Length >= 1)
+                    {
+                        Console.WriteLine(fileEntries[i]);
+                    }
+                    urls[i] = "http://localhost:8080/" + fileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/";
+                }
+
+                SimpleListenerExample(urls);
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Could not find any files!");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("You need to have at least one File to run the server");
+                Console.WriteLine("Press any Key....");
+                Console.ReadKey();
+
+
+
+            }
+
+
+
+
+
+
+        }
         // This example requires the System and System.Net namespaces.
         public static void SimpleListenerExample(string[] prefixes)
         {
@@ -65,12 +99,10 @@ namespace Server
             {
                 listener.Prefixes.Add(s);
             }
-
-            Console.WriteLine("Listening...");
-          
-            while (true)
-            {
-              
+            
+                Console.WriteLine("Listening...");
+                while (true)
+                {
                     listener.Start();
                     // Note: The GetContext method blocks while waiting for a request.
                     HttpListenerContext context = listener.GetContext();
@@ -88,11 +120,11 @@ namespace Server
                     // You must close the output stream.
                     output.Close();
                     listener.Stop();
-                  
                 }
             }
-            
-        }
+        
+
+
+
     }
-
-
+}

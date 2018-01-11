@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTestApplication"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{396B1B10-550B-426F-87C6-C7D6C22A8FDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WilmarServer", "Server\WilmarServer.csproj", "{9124ED34-E9DD-4FFB-98A3-05EB1F446ABC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server2", "Server2\Server2.csproj", "{B7DA1FF2-07F4-468A-8F83-95090D1A006F}"
 EndProject
