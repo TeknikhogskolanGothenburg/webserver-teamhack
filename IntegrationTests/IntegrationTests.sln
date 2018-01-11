@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server2", "Server2\Server2.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalmanServer", "SalmanServer\SalmanServer.csproj", "{A789E5F9-EC64-45F3-8F4F-C00D34D02962}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgusServer", "AgusServer\AgusServer.csproj", "{36DFBE55-0553-4082-A12F-4C4B197BFAB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A789E5F9-EC64-45F3-8F4F-C00D34D02962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36DFBE55-0553-4082-A12F-4C4B197BFAB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36DFBE55-0553-4082-A12F-4C4B197BFAB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36DFBE55-0553-4082-A12F-4C4B197BFAB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36DFBE55-0553-4082-A12F-4C4B197BFAB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
