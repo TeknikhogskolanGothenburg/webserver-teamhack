@@ -58,18 +58,17 @@ namespace Server2
             {
                 listener.Prefixes.Add(s);
             }
-            listener.Start();
+           
             Console.WriteLine("Listening...");
             while (true)
             {
+                 listener.Start();
                 // Note: The GetContext method blocks while waiting for a request.
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest request = context.Request;
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
-                // Construct a response.
-                //string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-                //string responseString = File.ReadAllText(@fileEntries[i]);
+             
                 Console.WriteLine("Current page: " + request.RawUrl);
                 string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
@@ -79,8 +78,9 @@ namespace Server2
                 output.Write(buffer, 0, buffer.Length);
                 // You must close the output stream.
                 output.Close();
+                listener.Stop();
             }
-            //listener.Stop();
+           
         }
     }
 }

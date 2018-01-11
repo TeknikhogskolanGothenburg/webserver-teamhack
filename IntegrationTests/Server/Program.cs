@@ -10,19 +10,31 @@ namespace Server
 {
     class Program
     {
-        private static string[] fileEntries;
+        private static String ContentFolderName = "Content";
         static void Main(string[] prefixes)
         {
+            //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
             //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
-            
-            fileEntries = Directory.GetFiles("Content");
-            string[] URL = new string[fileEntries.Length];
+            bool printFiles = true;
+            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            string[] urls = new string[fileEntries.Length];
+            if (printFiles)
+            {
+                Console.WriteLine("Files in " + ContentFolderName + " folder:");
+            }
             for (int i = 0; i < fileEntries.Length; i++)
             {
-                URL[i] = "http://localhost:8080/"+fileEntries[i].Substring(8)+"/";
-
+                if (printFiles)
+                {
+                    Console.WriteLine(fileEntries[i]);
+                }
+                urls[i] = "http://localhost:8080/" + fileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/";
             }
-            SimpleListenerExample(URL);
+            if (printFiles)
+            {
+                Console.WriteLine();
+            }
+            SimpleListenerExample(urls);
         }
 
         // This example requires the System and System.Net namespaces.
@@ -45,37 +57,30 @@ namespace Server
             {
                 listener.Prefixes.Add(s);
             }
-            
-            for (int i = 0; i < fileEntries.Length; i++)
+
+            Console.WriteLine("Listening...");
+            while (true)
             {
                 listener.Start();
-                Console.WriteLine("Listening...");
-
-
                 // Note: The GetContext method blocks while waiting for a request.
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest request = context.Request;
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
-                // Construct a response.
-                //string[] fileEntries = Directory.GetFiles("Content");
-                //foreach (string i in fileEntries)
-                //{
 
-
-                string responseString = File.ReadAllText(@fileEntries[i]);
-
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                Console.WriteLine("Current page: " + request.RawUrl);
+            
+                byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                 // Get a response stream and write the response to it.
                 response.ContentLength64 = buffer.Length;
-                Stream output = response.OutputStream;
+                System.IO.Stream output = response.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 // You must close the output stream.
                 output.Close();
                 listener.Stop();
-                //}
             }
-            
+
         }
     }
 }
+            
