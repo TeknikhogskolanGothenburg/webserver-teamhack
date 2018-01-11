@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,14 +11,17 @@ namespace Server2
 {
     class Program
     {
-        private static String ContentFolderName = "Content";
+        private static string ContentFolderName = "Content";
+        private static string[] PictureExtensions = new String[] { ".png", ".jpg", ".gif" };
+        private static string[] FileExtensions = new String[] { ".pdf" };
 
         static void Main(string[] prefixes)
         {
+            //https://github.com/skjohansen/AssignmentWebserver/blob/master/Assignment.md
             //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
             //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
             bool printFiles = true;
-            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            string[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
             string[] urls = new string[fileEntries.Length];
             if (printFiles)
             {
@@ -62,25 +66,60 @@ namespace Server2
             Console.WriteLine("Listening...");
             while (true)
             {
-                // Note: The GetContext method blocks while waiting for a request.
-                HttpListenerContext context = listener.GetContext();
-                HttpListenerRequest request = context.Request;
-                // Obtain a response object.
-                HttpListenerResponse response = context.Response;
-                // Construct a response.
-                //string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-                //string responseString = File.ReadAllText(@fileEntries[i]);
-                Console.WriteLine("Current page: " + request.RawUrl);
-                string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
-                // Get a response stream and write the response to it.
-                response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-                // You must close the output stream.
-                output.Close();
+                try
+                {
+                    // Note: The GetContext method blocks while waiting for a request.
+                    HttpListenerContext context = listener.GetContext();
+                    HttpListenerRequest request = context.Request;
+                    // Obtain a response object.
+                    HttpListenerResponse response = context.Response;
+                    // Construct a response.
+                    //string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+                    //string responseString = File.ReadAllText(@fileEntries[i]);
+                    Console.WriteLine("Current page: " + request.RawUrl);
+                    string resourcePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
+                    string responseString = File.ReadAllText(resourcePath);
+                    if (StringEndsWith(request.RawUrl, PictureExtensions))
+                    {
+                        response.ContentType = "image/gif";
+                    }
+                    byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+                    if (StringEndsWith(request.RawUrl, PictureExtensions) || StringEndsWith(request.RawUrl, FileExtensions))
+                    {
+
+                    }
+                    else
+                    {
+                        // Get a response stream and write the response to it.
+                        response.ContentLength64 = buffer.Length;
+                        Stream output = response.OutputStream;
+                        output.Write(buffer, 0, buffer.Length);
+                        // You must close the output stream.
+                        output.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
             //listener.Stop();
         }
+
+        public static bool StringEndsWith(String input, String[] endSequences)
+        {
+            if (input != null && endSequences != null)
+            {
+                foreach (String end in endSequences)
+                {
+                    if (input.EndsWith(end))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
     }
 }
