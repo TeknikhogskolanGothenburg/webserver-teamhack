@@ -17,19 +17,19 @@ namespace Server2
             //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
             //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
             bool printFiles = true;
-            String[] FileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
-            string[] urls = new string[FileEntries.Length];
+            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            string[] urls = new string[fileEntries.Length];
             if (printFiles)
             {
                 Console.WriteLine("Files in " + ContentFolderName + " folder:");
             }
-            for (int i = 0; i < FileEntries.Length; i++)
+            for (int i = 0; i < fileEntries.Length; i++)
             {
                 if (printFiles)
                 {
-                    Console.WriteLine(FileEntries[i]);
+                    Console.WriteLine(fileEntries[i]);
                 }
-                urls[i] = "http://localhost:8080/" + FileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/";
+                urls[i] = "http://localhost:8080/" + fileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/";
             }
             if (printFiles)
             {
