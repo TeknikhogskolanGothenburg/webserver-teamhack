@@ -21,6 +21,7 @@ namespace Server
             catch
             {
                 Console.WriteLine("Could not run the server");
+                Console.ReadKey();
 
             }
         }
