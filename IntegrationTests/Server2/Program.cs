@@ -86,7 +86,7 @@ namespace Server2
                     response.AddHeader("Content-Type", contentType);
                     response.AddHeader("ETag", hash);
                     response.AddHeader("Expires", (60*60*24*365).ToString()); // ett år är innehållet cachat
-                    Console.WriteLine("Current resource: " + request.RawUrl + " (type: " + contentType + ", 2: " + ", hash: " + hash + ")");
+                    Console.WriteLine("Current resource: " + request.RawUrl + " (type: " + contentType + ", hash: " + hash + ")");
                     //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                   
                     byte[] buffer = File.ReadAllBytes(filePath);
