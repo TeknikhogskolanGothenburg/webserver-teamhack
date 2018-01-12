@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,14 +11,21 @@ namespace Server2
 {
     class Program
     {
-        private static String ContentFolderName = "Content";
+        private static string ContentFolderName = "Content";
 
         static void Main(string[] prefixes)
         {
-            //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
-            //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
+            // https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
+            // https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
+            // https://github.com/skjohansen/AssignmentWebserver/blob/master/Assignment.md
+            // When making a request to a resouse at the webserver (eg. a file in the content folder) should the following HTTP header be set to the correct value:
+            // ✓ ContentType, the correct content type of the file (eg. text/html)
+            // ✓ Etag, should be implemented as a MD5 hash of the file content
+            // ✓ Expires, should be set to one year from "now"
+            // ?  StatusCodes, a usable status code should be returned (eg. 200 OK)
+            // x  Cookie, the server should return a cookie (see cookie subsection)
             bool printFiles = true;
-            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            string[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
             string[] urls = new string[fileEntries.Length];
             if (printFiles)
             {
@@ -70,14 +78,18 @@ namespace Server2
                     HttpListenerRequest request = context.Request;
                     // Obtain a response object.
                     HttpListenerResponse response = context.Response;
-                    Console.WriteLine(GetContentType(request.RawUrl));
-                    response.AddHeader("Content-Type", GetContentType(request.RawUrl));
+
+                    string resourcePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
+                    string contentType = GetContentType(request.RawUrl);
+                    string hash = ComputeHash(resourcePath);
+                    response.AddHeader("Content-Type", contentType);
+                    response.AddHeader("ETag", hash);
                     response.AddHeader("Expires", (60*60*24*365).ToString()); // ett år är innehållet cachat
 
-                    Console.WriteLine("Current resource: " + request.RawUrl);
+                    Console.WriteLine("Current resource: " + request.RawUrl + " (type: " + contentType + ", hash: " + hash + ")");
                     //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                   
-                    byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
+                    byte[] buffer = File.ReadAllBytes(resourcePath);
                     // Get a response stream and write the response to it.
                     response.ContentLength64 = buffer.Length;
                     Stream output = response.OutputStream;
@@ -91,7 +103,6 @@ namespace Server2
                 }
             }
             //listener.Stop();
-
         }
 
         private static string GetContentType(string resource)
@@ -107,6 +118,14 @@ namespace Server2
                 {
                     return "application/pdf";
                 }
+                else if (resource.EndsWith(".css"))
+                {
+                    return "text/css";
+                }
+                else if (resource.EndsWith(".js"))
+                {
+                    return "text/javascript";
+                }
             }
             return "text/html";
         }
@@ -115,7 +134,7 @@ namespace Server2
         {
             if (resource != null)
             {
-                string[] imageExtensions = new string[] { ".jpg", ".png", ".gif" };
+                string[] imageExtensions = new string[] { ".jpg", ".png", ".gif", ".bmp", ".tif" };
                 for (int i = 0; imageExtensions.Length > i; i++)
                 {
                     if (resource.EndsWith(imageExtensions[i]))
@@ -126,5 +145,15 @@ namespace Server2
             }
             return false;
         }
+
+        private static string ComputeHash(string filePath) // modifierat från https://stackoverflow.com/a/27481514
+        {
+            using (var md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(File.ReadAllBytes(filePath));
+                return BitConverter.ToString(hash).Replace("-", "");
+            }
+        }
+
     }
 }
