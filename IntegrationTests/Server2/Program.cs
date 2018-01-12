@@ -58,29 +58,36 @@ namespace Server2
             {
                 listener.Prefixes.Add(s);
             }
-           
+            
             Console.WriteLine("Listening...");
+            listener.Start();
             while (true)
             {
-                 listener.Start();
-                // Note: The GetContext method blocks while waiting for a request.
-                HttpListenerContext context = listener.GetContext();
-                HttpListenerRequest request = context.Request;
-                // Obtain a response object.
-                HttpListenerResponse response = context.Response;
-             
-                Console.WriteLine("Current page: " + request.RawUrl);
-                string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
-                byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
-                // Get a response stream and write the response to it.
-                response.ContentLength64 = buffer.Length;
-                System.IO.Stream output = response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
-                // You must close the output stream.
-                output.Close();
-                listener.Stop();
+                try
+                {
+                    // Note: The GetContext method blocks while waiting for a request.
+                    HttpListenerContext context = listener.GetContext();
+                    HttpListenerRequest request = context.Request;
+                    // Obtain a response object.
+                    HttpListenerResponse response = context.Response;
+
+                    Console.WriteLine("Current resource: " + request.RawUrl);
+                    //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
+                    byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
+                    // Get a response stream and write the response to it.
+                    response.ContentLength64 = buffer.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    // You must close the output stream.
+                    output.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
-           
+            //listener.Stop();
+
         }
     }
 }
