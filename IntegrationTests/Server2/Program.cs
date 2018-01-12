@@ -70,6 +70,9 @@ namespace Server2
                     HttpListenerRequest request = context.Request;
                     // Obtain a response object.
                     HttpListenerResponse response = context.Response;
+                    Console.WriteLine(GetContentType(request.RawUrl));
+                    response.AddHeader("Content-Type", GetContentType(request.RawUrl));
+                    response.AddHeader("Expires", (60*60*24*365).ToString()); // ett år är innehållet cachat
 
                     Console.WriteLine("Current resource: " + request.RawUrl);
                     //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
@@ -88,6 +91,39 @@ namespace Server2
             }
             //listener.Stop();
 
+        }
+
+        private static string GetContentType(string resource)
+        {
+            if (resource != null)
+            {
+                resource = resource.ToLower();
+                if (IsPicture(resource))
+                {
+                    return "image/" + resource.Substring(resource.Length-3);
+                }
+                else if (resource.EndsWith(".pdf"))
+                {
+                    return "application/pdf";
+                }
+            }
+            return "text/html";
+        }
+
+        private static bool IsPicture(string resource)
+        {
+            if (resource != null)
+            {
+                string[] imageExtensions = new string[] { ".jpg", ".png", ".gif" };
+                for (int i = 0; imageExtensions.Length > i; i++)
+                {
+                    if (resource.EndsWith(imageExtensions[i]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
