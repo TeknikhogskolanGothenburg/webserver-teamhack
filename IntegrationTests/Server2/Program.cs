@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,17 +10,14 @@ namespace Server2
 {
     class Program
     {
-        private static string ContentFolderName = "Content";
-        private static string[] PictureExtensions = new String[] { ".png", ".jpg", ".gif" };
-        private static string[] FileExtensions = new String[] { ".pdf" };
+        private static String ContentFolderName = "Content";
 
         static void Main(string[] prefixes)
         {
-            //https://github.com/skjohansen/AssignmentWebserver/blob/master/Assignment.md
             //https://github.com/skjohansen/AssignmentWebserver/blob/master/Hints.md
             //https://msdn.microsoft.com/en-us/library/system.net.httplistener(v=vs.110).aspx
             bool printFiles = true;
-            string[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
+            String[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
             string[] urls = new string[fileEntries.Length];
             if (printFiles)
             {
@@ -62,8 +58,9 @@ namespace Server2
             {
                 listener.Prefixes.Add(s);
             }
-            listener.Start();
+            
             Console.WriteLine("Listening...");
+            listener.Start();
             while (true)
             {
                 try
@@ -73,30 +70,20 @@ namespace Server2
                     HttpListenerRequest request = context.Request;
                     // Obtain a response object.
                     HttpListenerResponse response = context.Response;
-                    // Construct a response.
-                    //string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
-                    //string responseString = File.ReadAllText(@fileEntries[i]);
-                    Console.WriteLine("Current page: " + request.RawUrl);
-                    string resourcePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
-                    string responseString = File.ReadAllText(resourcePath);
-                    if (StringEndsWith(request.RawUrl, PictureExtensions))
-                    {
-                        response.ContentType = "image/gif";
-                    }
-                    byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-                    if (StringEndsWith(request.RawUrl, PictureExtensions) || StringEndsWith(request.RawUrl, FileExtensions))
-                    {
+                    Console.WriteLine(GetContentType(request.RawUrl));
+                    response.AddHeader("Content-Type", GetContentType(request.RawUrl));
+                    response.AddHeader("Expires", (60*60*24*365).ToString()); // ett år är innehållet cachat
 
-                    }
-                    else
-                    {
-                        // Get a response stream and write the response to it.
-                        response.ContentLength64 = buffer.Length;
-                        Stream output = response.OutputStream;
-                        output.Write(buffer, 0, buffer.Length);
-                        // You must close the output stream.
-                        output.Close();
-                    }
+                    Console.WriteLine("Current resource: " + request.RawUrl);
+                    //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
+                  
+                    byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
+                    // Get a response stream and write the response to it.
+                    response.ContentLength64 = buffer.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    // You must close the output stream.
+                    output.Close();
                 }
                 catch (Exception e)
                 {
@@ -104,15 +91,34 @@ namespace Server2
                 }
             }
             //listener.Stop();
+
         }
 
-        public static bool StringEndsWith(String input, String[] endSequences)
+        private static string GetContentType(string resource)
         {
-            if (input != null && endSequences != null)
+            if (resource != null)
             {
-                foreach (String end in endSequences)
+                resource = resource.ToLower();
+                if (IsPicture(resource))
                 {
-                    if (input.EndsWith(end))
+                    return "image/" + resource.Substring(resource.Length-3);
+                }
+                else if (resource.EndsWith(".pdf"))
+                {
+                    return "application/pdf";
+                }
+            }
+            return "text/html";
+        }
+
+        private static bool IsPicture(string resource)
+        {
+            if (resource != null)
+            {
+                string[] imageExtensions = new string[] { ".jpg", ".png", ".gif" };
+                for (int i = 0; imageExtensions.Length > i; i++)
+                {
+                    if (resource.EndsWith(imageExtensions[i]))
                     {
                         return true;
                     }
@@ -120,6 +126,5 @@ namespace Server2
             }
             return false;
         }
-
     }
 }
