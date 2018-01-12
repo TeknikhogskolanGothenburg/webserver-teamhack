@@ -94,7 +94,7 @@ namespace Server
 
             // Create a listener.
             HttpListener listener = new HttpListener();
-            // Add the prefixes.
+            // Add the prefixes.//
             foreach (string s in prefixes)
             {
                 listener.Prefixes.Add(s);
