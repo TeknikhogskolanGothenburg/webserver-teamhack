@@ -13,12 +13,12 @@ namespace Server
         private static String ContentFolderName = "Content";
         private static int w;
 
-        public static  void RunServer()
+        public static void RunServer()
         {
-             GetPrefixes();
-  
+            GetPrefixes();
+
         }
-      
+
         private static void GetPrefixes()
         {
             try
@@ -98,36 +98,30 @@ namespace Server
             foreach (string s in prefixes)
             {
                 listener.Prefixes.Add(s);
-                //Cookie 
-                //    l= new Cookie("contoso", "123,456", "", "https://contoso.com");
-                //CookieContainer e = new CookieContainer();
-            }
-            
-                Console.WriteLine("Listening...");
-                while (true)
-                {
-                    listener.Start();
-                
-                    // Note: The GetContext method blocks while waiting for a request.
-                    HttpListenerContext context = listener.GetContext();
-                    HttpListenerRequest request = context.Request;
-                // Obtain a response object.
-                     HttpListenerResponse response = context.Response;
-             
 
-                Console.WriteLine("Current page: " + request.RawUrl);
-              
-                    byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
-                    // Get a response stream and write the response to it.
-                    response.ContentLength64 = buffer.Length;
-                    System.IO.Stream output = response.OutputStream;
-                    output.Write(buffer, 0, buffer.Length);
-                    // You must close the output stream.
-                    output.Close();
-         
             }
+            Console.WriteLine("Listening...");
+            listener.Start();
+            while (true)
+            {
+                // Note: The GetContext method blocks while waiting for a request.
+                HttpListenerContext context = listener.GetContext();
+
+                // Obtain a response object.
+
+                Console.WriteLine("Current page: " + context.Request.RawUrl);
+
+                byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl);
+                // Get a response stream and write the response to it.
+                context.Response.ContentLength64 = buffer.Length;
+                System.IO.Stream output = context.Response.OutputStream;
+                output.Write(buffer, 0, buffer.Length);
+                // You must close the output stream.
+                output.Close();
+
             }
-        
+        }
+
 
 
 
