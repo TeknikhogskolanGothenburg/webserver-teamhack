@@ -81,14 +81,13 @@ namespace Server2
                     HttpListenerResponse response = context.Response;
 
                     string filePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
-                    string contentType = MimeMapping.GetMimeMapping(filePath);
-                    string hash = ComputeHash(filePath);
-                    response.AddHeader("Content-Type", contentType);
-                    response.AddHeader("ETag", hash);
-                    response.AddHeader("Expires", (60*60*24*365).ToString()); // ett år är innehållet cachat
-                    Console.WriteLine("Current resource: " + request.RawUrl + " (type: " + contentType + ", hash: " + hash + ")");
+                    response.AddHeader("Content-Type", MimeMapping.GetMimeMapping(filePath));
+                    response.AddHeader("ETag", ComputeHash(filePath));
+                    response.AddHeader("Expires", ToHTTPDate(DateTime.Now.AddYears(1))); // ett år är innehållet cachat
+                    Console.WriteLine("Current resource: " + request.RawUrl);
+                    Console.WriteLine(response.Headers);
                     //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
-                  
+
                     byte[] buffer = File.ReadAllBytes(filePath);
                     // Get a response stream and write the response to it.
                     response.ContentLength64 = buffer.Length;
@@ -103,6 +102,11 @@ namespace Server2
                 }
             }
             //listener.Stop();
+        }
+
+        private static String ToHTTPDate(DateTime date) // taget från https://stackoverflow.com/a/13089
+        {
+            return date.ToUniversalTime().ToString("r");
         }
 
         private static string ComputeHash(string filePath) // modifierat från https://stackoverflow.com/a/27481514
