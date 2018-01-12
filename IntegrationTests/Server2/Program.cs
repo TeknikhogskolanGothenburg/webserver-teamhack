@@ -6,6 +6,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Server2
 {
@@ -79,17 +80,16 @@ namespace Server2
                     // Obtain a response object.
                     HttpListenerResponse response = context.Response;
 
-                    string resourcePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
-                    string contentType = GetContentType(request.RawUrl);
-                    string hash = ComputeHash(resourcePath);
+                    string filePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
+                    string contentType = MimeMapping.GetMimeMapping(filePath);
+                    string hash = ComputeHash(filePath);
                     response.AddHeader("Content-Type", contentType);
                     response.AddHeader("ETag", hash);
                     response.AddHeader("Expires", (60*60*24*365).ToString()); // ett år är innehållet cachat
-
-                    Console.WriteLine("Current resource: " + request.RawUrl + " (type: " + contentType + ", hash: " + hash + ")");
+                    Console.WriteLine("Current resource: " + request.RawUrl + " (type: " + contentType + ", 2: " + ", hash: " + hash + ")");
                     //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                   
-                    byte[] buffer = File.ReadAllBytes(resourcePath);
+                    byte[] buffer = File.ReadAllBytes(filePath);
                     // Get a response stream and write the response to it.
                     response.ContentLength64 = buffer.Length;
                     Stream output = response.OutputStream;
@@ -105,47 +105,6 @@ namespace Server2
             //listener.Stop();
         }
 
-        private static string GetContentType(string resource)
-        {
-            if (resource != null)
-            {
-                resource = resource.ToLower();
-                if (IsPicture(resource))
-                {
-                    return "image/" + resource.Substring(resource.Length-3);
-                }
-                else if (resource.EndsWith(".pdf"))
-                {
-                    return "application/pdf";
-                }
-                else if (resource.EndsWith(".css"))
-                {
-                    return "text/css";
-                }
-                else if (resource.EndsWith(".js"))
-                {
-                    return "text/javascript";
-                }
-            }
-            return "text/html";
-        }
-
-        private static bool IsPicture(string resource)
-        {
-            if (resource != null)
-            {
-                string[] imageExtensions = new string[] { ".jpg", ".png", ".gif", ".bmp", ".tif" };
-                for (int i = 0; imageExtensions.Length > i; i++)
-                {
-                    if (resource.EndsWith(imageExtensions[i]))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
         private static string ComputeHash(string filePath) // modifierat från https://stackoverflow.com/a/27481514
         {
             using (var md5 = MD5.Create())
@@ -154,6 +113,47 @@ namespace Server2
                 return BitConverter.ToString(hash).Replace("-", "");
             }
         }
+
+        //private static string GetContentType(string filePath)
+        //{
+        //    if (filePath != null)
+        //    {
+        //        filePath = filePath.ToLower();
+        //        if (IsPicture(filePath))
+        //        {
+        //            return "image/" + filePath.Substring(filePath.Length - 3);
+        //        }
+        //        else if (filePath.EndsWith(".pdf"))
+        //        {
+        //            return "application/pdf";
+        //        }
+        //        else if (filePath.EndsWith(".css"))
+        //        {
+        //            return "text/css";
+        //        }
+        //        else if (filePath.EndsWith(".js"))
+        //        {
+        //            return "text/javascript";
+        //        }
+        //    }
+        //    return "text/html";
+        //}
+
+        //private static bool IsPicture(string filePath)
+        //{
+        //    if (filePath != null)
+        //    {
+        //        string[] imageExtensions = new string[] { ".jpg", ".png", ".gif", ".bmp", ".tif" };
+        //        for (int i = 0; imageExtensions.Length > i; i++)
+        //        {
+        //            if (filePath.EndsWith(imageExtensions[i]))
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
 
     }
 }
