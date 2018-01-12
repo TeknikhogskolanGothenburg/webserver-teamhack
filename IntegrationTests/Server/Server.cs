@@ -11,8 +11,7 @@ namespace Server
     class Server
     {
         private static String ContentFolderName = "Content";
-        private static int w;
-
+ 
         public static void RunServer()
         {
             GetPrefixes();
@@ -67,17 +66,9 @@ namespace Server
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("You need to have at least one File to run the server");
                 Console.WriteLine("Press any Key....");
-                Console.ReadKey();
-
-
-
+                Console.ReadKey(); 
             }
-
-
-
-
-
-
+            
         }
         // This example requires the System and System.Net namespaces.
         public static void SimpleListenerExample(string[] prefixes)
@@ -101,15 +92,22 @@ namespace Server
 
             }
             Console.WriteLine("Listening...");
+          
             listener.Start();
             while (true)
             {
                 // Note: The GetContext method blocks while waiting for a request.
                 HttpListenerContext context = listener.GetContext();
-
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
                 // Obtain a response object.
 
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Current page: " + context.Request.RawUrl);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Status Code ");
+                Console.WriteLine( context.Response.StatusCode  );
+                
+
 
                 byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl);
                 // Get a response stream and write the response to it.
