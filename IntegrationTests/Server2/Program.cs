@@ -71,7 +71,7 @@ namespace Server2
              
                 Console.WriteLine("Current page: " + request.RawUrl);
                 string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                 // Get a response stream and write the response to it.
                 response.ContentLength64 = buffer.Length;
                 System.IO.Stream output = response.OutputStream;
