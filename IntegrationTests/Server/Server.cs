@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,16 +15,16 @@ namespace Server
 
         public static void RunServer()
         {
-            GetPrefixes();
+            StartServer();
 
         }
 
-        private static void GetPrefixes()
+        private static void StartServer()
         {
             try
             {
-                CreatePrefixes();
 
+                SimpleListenerExample("http://localhost:8080/");
 
             }
             catch (Exception e)
@@ -48,80 +49,49 @@ namespace Server
             Console.WriteLine(" Content Directory Was Deleted");
             Console.ForegroundColor = ConsoleColor.White;
             Directory.CreateDirectory("Content");
-            CreatePrefixes();
             Console.WriteLine("New Content Directory Was Created");
             Console.ReadKey();
         }
-        private static void CreatePrefixes()
-        {
-            string[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
-            List<string> urls = new List<string>();
-            if (fileEntries.Length >= 1)
-            {
-                Console.WriteLine("Files in " + ContentFolderName + " folder:");
 
-                //for (int i = 0; i < fileEntries.Length; i++)
-                //{
-                //    if (ContentFolderName.Length >= 1)
-                //    {
-                //        Console.WriteLine(fileEntries[i]);
-                //    }
-                //    urls.Add("http://localhost:8080/" + fileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/");
-                //}
-                urls.Add("http://localhost:8080/");
-                SimpleListenerExample(urls);
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Could not find any files!");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("You need to have at least one File to run the server");
-                Console.WriteLine("Press any Key....");
-                Console.ReadKey();
-            }
 
-        }
         // This example requires the System and System.Net namespaces.
-        public static void SimpleListenerExample(List<string> prefixes)
+        public static void SimpleListenerExample(string prefix)
         {
             if (!HttpListener.IsSupported)
             {
                 Console.WriteLine("Windows XP SP2 or Server 2003 is required to use the HttpListener class.");
                 return;
             }
-            // URI prefixes are required,
-            // for example "http://contoso.com:8080/index/".
-            if (prefixes == null || prefixes.Count == 0)
-                throw new ArgumentException("prefixes");
 
-            // Create a listener.
-            HttpListener listener = new HttpListener();
-            // Add the prefixes.//
-            foreach (string s in prefixes)
+            if (prefix == null)
             {
-                listener.Prefixes.Add(s);
-
+                throw new ArgumentException("prefix");
             }
-           
+
+            HttpListener listener = new HttpListener();
+            listener.Prefixes.Add(prefix);
             Console.WriteLine("Listening...");
 
             listener.Start();
+            byte[] buffer;
+
+
             while (true)
             {
                 try
                 {
                     // Note: The GetContext method blocks while waiting for a request.
                     HttpListenerContext context = listener.GetContext();
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    
                     // Obtain a response object.
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Current page: " + context.Request.RawUrl);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Status Code ");
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
                     Console.WriteLine(context.Response.StatusCode);
-                    if (context.Request.RawUrl == "/")
+                    if (context.Request.RawUrl == "/" || context.Request.RawUrl == "/index"|| Directory.Exists(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl))
                     {
                         Redirect(context);
                     }
@@ -129,47 +99,119 @@ namespace Server
                     {
                         if (File.Exists(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl))
                         {
-                            byte[] buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl);
+
+                           
+                           context.Response.AddHeader("ETag", "cec994848ca6b58f6831a0676cd8670f");// ?? han söker efter det här 
+
+                            context.Response.AddHeader("Content-Type", GetContentType(context.Request.RawUrl));
+                            context.Response.AddHeader("Expires",DateTime.Now.ToString()); // Detta funkar inte än 
+                            buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl);
                             // Get a response stream and write the response to it.
+                            context.Response.ContentLength64 = buffer.Length;
+                            System.IO.Stream output = context.Response.OutputStream;
+                            output.Write(buffer, 0, buffer.Length);
+                           
+                            // You must close the output stream.
+                            output.Close();
+                            
+                        }
+                        else
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                            Console.WriteLine("Not Found Object");
+                            Console.WriteLine(context.Response.StatusCode);
+                            context.Response.StatusDescription = "The link was broken";
+                            string rstr = "<Html><Body><h1>The Website was not Found </h1></Body> </Html>";
+                            buffer = Encoding.UTF8.GetBytes(rstr);
                             context.Response.ContentLength64 = buffer.Length;
                             System.IO.Stream output = context.Response.OutputStream;
                             output.Write(buffer, 0, buffer.Length);
                             // You must close the output stream.
                             output.Close();
-                        }
-                        else
-                        {
-                            Redirect(context);
+
                         }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e);
+                   
                 }
             }
         }
 
         static void Redirect(HttpListenerContext context)
         {
+
             byte[] buffer;
-            if (File.Exists(ContentFolderName + "/index.html"))
-            {
-                buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + "/index.html");
-            }
+            if (context.Request.RawUrl == "index.html") {
+                if (File.Exists(ContentFolderName + "/index.html"))
+                {
+                    buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + "/index.html");
+                }
+                else
+                {
+                    string rstr = "<Html><Body><h1>Hello Wolrd </h1></Body> </Html>";
+                    buffer = Encoding.UTF8.GetBytes(rstr);
+                }
+        }
             else
             {
-                string rstr = "<Html><Body><h1>Hello Wolrd </h1></Body> </Html>";
-                buffer = Encoding.UTF8.GetBytes(rstr);
-        }
-        // Get a response stream and write the response to it.
-        context.Response.ContentLength64 = buffer.Length;
+                buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl+"index.html");
+            }
+            // Get a response stream and write the response to it.
+            context.Response.ContentLength64 = buffer.Length;
             System.IO.Stream output = context.Response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
             // You must close the output stream.
             output.Close();
         }
+        private static string GetContentType(string resource)
+        {
+            if (resource != null)
+            {
+                resource = resource.ToLower();
+                if (IsPicture(resource))
+                {
+                    return "image/" + resource.Substring(resource.Length - 3);
+                }
+                else if (resource.EndsWith(".pdf"))
+                {
+                    return "application/pdf";
+                }
+                else if (resource.EndsWith(".css"))
+                {
+                    return "text/css";
+                    
+                }
+                else if (resource.EndsWith(".js"))
+                {
+                    return "application/javascript";
+                   
+                }
+            }
+            return "text/html";
+        }
 
-
+        private static bool IsPicture(string resource)
+        {
+            if (resource != null)
+            {
+                string[] imageExtensions = new string[] { ".jpeg", ".png", ".gif" , ".jpg" };
+                for (int i = 0; imageExtensions.Length > i; i++)
+                {
+                    if (resource.EndsWith(imageExtensions[i]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
+
+    
+
+
+
