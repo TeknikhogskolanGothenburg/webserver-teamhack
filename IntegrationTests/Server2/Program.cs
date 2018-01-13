@@ -13,6 +13,7 @@ namespace Server2
     class Program
     {
         private static string ContentFolderName = "Content";
+        private static bool PrintDebug = true;
 
         static void Main(string[] prefixes)
         {
@@ -24,30 +25,29 @@ namespace Server2
             // ✓ Etag, should be implemented as a MD5 hash of the file content
             // ✓ Expires, should be set to one year from "now"
             // ?  StatusCodes, a usable status code should be returned (eg. 200 OK)
-            // x  Cookie, the server should return a cookie (see cookie subsection)
-            bool printFiles = true;
+            // ✓ Cookie, the server should return a cookie (see cookie subsection)
+            
             string[] fileEntries = Directory.GetFiles(ContentFolderName, "*", SearchOption.AllDirectories); // hämtar även filer i submappar
             string[] urls = new string[fileEntries.Length];
-            if (printFiles)
+            if (PrintDebug)
             {
                 Console.WriteLine("Files in " + ContentFolderName + " folder:");
             }
             for (int i = 0; i < fileEntries.Length; i++)
             {
-                if (printFiles)
+                if (PrintDebug)
                 {
                     Console.WriteLine(fileEntries[i]);
                 }
                 urls[i] = "http://localhost:8080/" + fileEntries[i].Substring(ContentFolderName.Length + 1).Replace('\\', '/') + "/";
             }
-            if (printFiles)
+            if (PrintDebug)
             {
                 Console.WriteLine();
             }
             SimpleListenerExample(urls);
         }
 
-        // This example requires the System and System.Net namespaces.
         public static void SimpleListenerExample(string[] prefixes)
         {
             if (!HttpListener.IsSupported)
@@ -55,14 +55,11 @@ namespace Server2
                 Console.WriteLine("Windows XP SP2 or Server 2003 is required to use the HttpListener class.");
                 return;
             }
-            // URI prefixes are required,
-            // for example "http://contoso.com:8080/index/".
-            if (prefixes == null || prefixes.Length == 0)
+
+            if (prefixes == null || prefixes.Length == 0) // URI prefixes are required, for example "http://contoso.com:8080/index/".
                 throw new ArgumentException("prefixes");
 
-            // Create a listener.
             HttpListener listener = new HttpListener();
-            // Add the prefixes.
             foreach (string s in prefixes)
             {
                 listener.Prefixes.Add(s);
@@ -74,26 +71,20 @@ namespace Server2
             {
                 try
                 {
-                    // Note: The GetContext method blocks while waiting for a request.
-                    HttpListenerContext context = listener.GetContext();
+                    HttpListenerContext context = listener.GetContext(); // Note: The GetContext method blocks while waiting for a request.
                     HttpListenerRequest request = context.Request;
-                    // Obtain a response object.
-                    HttpListenerResponse response = context.Response;
+                    HttpListenerResponse response = context.Response; // Obtain a response object.
 
-                    string filePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
-                    response.AddHeader("Content-Type", MimeMapping.GetMimeMapping(filePath));
-                    response.AddHeader("ETag", ComputeHash(filePath));
-                    response.AddHeader("Expires", ToHTTPDate(DateTime.Now.AddYears(1))); // ett år är innehållet cachat
                     Console.WriteLine("Current resource: " + request.RawUrl);
-                    Console.WriteLine(response.Headers);
-                    //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
+                    string filePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl;
+                    UpdateCounterCookie(request, response, PrintDebug);
+                    AddHeaders(response, filePath, PrintDebug);
 
+                    //string responseString = File.ReadAllText(Directory.GetCurrentDirectory() + "/" + ContentFolderName + request.RawUrl);
                     byte[] buffer = File.ReadAllBytes(filePath);
-                    // Get a response stream and write the response to it.
                     response.ContentLength64 = buffer.Length;
                     Stream output = response.OutputStream;
                     output.Write(buffer, 0, buffer.Length);
-                    // You must close the output stream.
                     output.Close();
                 }
                 catch (Exception e)
@@ -102,6 +93,35 @@ namespace Server2
                 }
             }
             //listener.Stop();
+        }
+
+        private static void AddHeaders(HttpListenerResponse response, string filePath, bool printHeaders)
+        {
+            response.AddHeader("Content-Type", MimeMapping.GetMimeMapping(filePath));
+            response.AddHeader("ETag", ComputeHash(filePath));
+            response.AddHeader("Expires", ToHTTPDate(DateTime.Now.AddYears(1)));
+            if (printHeaders)
+            {
+                Console.WriteLine(response.Headers);
+            }
+        }
+
+        private static void UpdateCounterCookie(HttpListenerRequest request, HttpListenerResponse response, bool printValue)
+        {
+            Cookie cookie = request.Cookies["CounterCookie"];
+            if (cookie != null)
+            {
+                cookie.Value = (Int32.Parse(cookie.Value) + 1).ToString();
+            }
+            else
+            {
+                cookie = new Cookie("CounterCookie", "1");
+            }
+            response.Cookies.Add(cookie);
+            if (printValue)
+            {
+                Console.WriteLine("Cookie counter: " + cookie.Value);
+            }
         }
 
         private static String ToHTTPDate(DateTime date) // taget från https://stackoverflow.com/a/13089
