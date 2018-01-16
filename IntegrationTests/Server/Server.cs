@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,9 @@ namespace Server
 {
     class Server
     {
+        private static HttpListenerContext context { get; set; }
         private static String ContentFolderName = "Content";
+       
 
         public static void RunServer()
         {
@@ -81,7 +84,7 @@ namespace Server
                 try
                 {
                     // Note: The GetContext method blocks while waiting for a request.
-                    HttpListenerContext context = listener.GetContext();
+                    context = listener.GetContext();
                     
                     // Obtain a response object.
 
@@ -89,7 +92,7 @@ namespace Server
                     Console.WriteLine("Current page: " + context.Request.RawUrl);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("Status Code ");
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    Console.WriteLine(DateTime.UtcNow.AddYears(1).ToString("o"));
                     Console.WriteLine(context.Response.StatusCode);
                     if (context.Request.RawUrl == "/" || context.Request.RawUrl == "/index"|| Directory.Exists(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl))
                     {
@@ -99,13 +102,15 @@ namespace Server
                     {
                         if (File.Exists(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl))
                         {
-
-                           
-                           context.Response.AddHeader("ETag", "cec994848ca6b58f6831a0676cd8670f");// ?? han söker efter det här 
-
+                            string filePath = Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl;
+        
+                            context.Response.AddHeader("ETag", ComputeHash(filePath));
+                            context.Response.AddHeader("Expires", DateTime.UtcNow.AddYears(1).ToString("o")); // detta funkar 
                             context.Response.AddHeader("Content-Type", GetContentType(context.Request.RawUrl));
-                            context.Response.AddHeader("Expires",DateTime.Now.ToString()); // Detta funkar inte än 
-                            buffer = File.ReadAllBytes(Directory.GetCurrentDirectory() + "/" + ContentFolderName + context.Request.RawUrl);
+                          
+
+
+                            buffer = File.ReadAllBytes(filePath);
                             // Get a response stream and write the response to it.
                             context.Response.ContentLength64 = buffer.Length;
                             System.IO.Stream output = context.Response.OutputStream;
@@ -139,7 +144,8 @@ namespace Server
                 }
             }
         }
-
+       
+        
         static void Redirect(HttpListenerContext context)
         {
 
@@ -151,7 +157,7 @@ namespace Server
                 }
                 else
                 {
-                    string rstr = "<Html><Body><h1>Hello Wolrd </h1></Body> </Html>";
+                    string rstr = "<Html><Body><h1>Server is Running </h1></Body> </Html>";
                     buffer = Encoding.UTF8.GetBytes(rstr);
                 }
         }
@@ -208,6 +214,28 @@ namespace Server
             }
             return false;
         }
+
+        private static String ToHTTPDate(DateTime date) // taget från https://stackoverflow.com/a/13089
+        {
+            return date.ToUniversalTime().ToString("r");
+        }
+
+        private static string ComputeHash(string filePath) // modifierat från https://stackoverflow.com/a/27481514
+        {
+            using (var md5 = MD5.Create())
+            {
+                byte[] hash = md5.ComputeHash(File.ReadAllBytes(filePath));
+                return BitConverter.ToString(hash).Replace("-", "");
+            }
+        }
+
+
+
+
+
+
+
+
     }
 }
 
